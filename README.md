@@ -1,31 +1,22 @@
 # dns_privacy_analysis
-DNS 隐私方案分析
+DNS privacy analysis, DNS隐私方案分析
+
+Noted at March 2016 with Chinese.
 
 2016年3月的分析笔记：[DNS 隐私方案分析](http://abbypan.github.io/2016/03/10/dns-privacy-analysis)
 
-# 参考材料
+# Nowadays DNS architecture 
 
-[knell for dns](https://gnunet.org/sites/default/files/mcb-en.pdf)
+As hierarchical design in DNS protocol, dns queries are generated at stub by end-user, first send to recursive resolver, and then recursive  resolver send to authoritative severs such as Root, TLD, SLD.
+There are 5 dns nodes and 4 query links:
+* stub -> recursive resolver
+* recursive resolver -> Root
+* recursive resolver -> TLD
+* recursive resolver -> SLD
 
-[dprive problem](https://tools.ietf.org/html/draft-ietf-dprive-problem-statement-06)
+If nodes use DNS over TLS、DNS Cookie to communicate with each other, then they can hide the dns query information from the query link, but still risk at MITM.
 
-[DNS privacy considerations](https://datatracker.ietf.org/doc/draft-bortzmeyer-dnsop-dns-privacy/)
-
-[dns oarc 2016 ag](https://indico.dns-oarc.net/event/22/timetable/#all.detailed)
-
-# 现行解析架构
-
-根据DNS协议的分层设计，用户的DNS解析请求从用户终端的Stub 解析器发送到递归服务器，再由递归服务器向根、顶级域、二级及以下权威服务器发起迭代查询。该查询过程至少会涉及上述5个DNS节点的4条查询链路：
-
-（1）	Stub解析器 -> 递归服务器
-
-（2）	递归服务器 -> 根
-
-（3）	递归服务器 -> 顶级域
-
-（4）	递归服务器 -> 二级及以下权威
-
-在查询链路上，如果节点双方采取DNS over TLS等对称加密或Cookie型认证方案，可以有效隐藏查询域名信息，但是无法规避中间人攻击的风险。针对DNS节点在上述查询链路的隐私风险保护，现行方案概要如下：
+Nowadays DNS privacy protection technologies: 
 
 ## Stub解析器（用户终端）
 
@@ -122,4 +113,30 @@ DNS本质上是一种查表型的信息服务，在传统层次型的DNS解析�
 理论上的好处：能够避免递归服务器对客户端的域名查询信息进行监测分析，从而规避“用户<->递归”层面的隐私泄漏问题。结合现有的 DNS 解析架构形成一个客户端协作网络，减少递归对于用户的集中式窥探可能。
 
 产品上不实用的原因：配个DNS就能搞定的事，大部分人不会再去装一个专用client。
+
+
+# References 参考材料
+
+[knell for dns](https://gnunet.org/sites/default/files/mcb-en.pdf)
+
+[dprive problem](https://tools.ietf.org/html/draft-ietf-dprive-problem-statement-06)
+
+[DNS privacy considerations](https://datatracker.ietf.org/doc/draft-bortzmeyer-dnsop-dns-privacy/)
+
+[dns oarc 2016 ag](https://indico.dns-oarc.net/event/22/timetable/#all.detailed)
+
+
+# 现行解析架构
+
+根据DNS协议的分层设计，用户的DNS解析请求从用户终端的Stub 解析器发送到递归服务器，再由递归服务器向根、顶级域、二级及以下权威服务器发起迭代查询。该查询过程至少会涉及上述5个DNS节点的4条查询链路：
+
+（1）	Stub解析器 -> 递归服务器
+
+（2）	递归服务器 -> 根
+
+（3）	递归服务器 -> 顶级域
+
+（4）	递归服务器 -> 二级及以下权威
+
+在查询链路上，如果节点双方采取DNS over TLS等对称加密或Cookie型认证方案，可以有效隐藏查询域名信息，但是无法规避中间人攻击的风险。针对DNS节点在上述查询链路的隐私风险保护，现行方案概要如下：
 
