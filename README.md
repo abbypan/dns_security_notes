@@ -18,6 +18,126 @@ If nodes use DNS over TLS、DNS Cookie to communicate with each other, then they
 
 Nowadays DNS privacy protection technologies: 
 
+## stub resolver (end-user)
+
+stub resolver send clear text udp query to recursive resolver, there are eavesdrop and MITM attack risk on the link.
+
+DNSCrypt can slove eavesdrop and MITM risk.
+
+But recursive resolver can know all about the domain quries of each end-user. To avoid the domain queries interest gathered by recursive resolver, end-user can use ip proxy, mix-query to hide the truely ip address and visit domain interest.
+
+## recursive resolver (public recursive, isp recursive)
+
+most of end-users use isp recursive resolvers, or public recursive resolvers such as Google Public DNS/OpenDNS.
+
+As a critical node between end-user and authoritative server, recursive resolver can know about realtime hot domain queries of internet business.
+
+Recursive resolvers can support some privacy protection to end-user, such as DNS over TLD, DNSCrypt.
+
+Recursive resolver can hide some information from authoritative server, or give some additional information to authoritative server. Google's "client subnet in dns requests" ECS option, leak the subnet of end-user. AFNIC's "DNS query name minimization" hide part of domain name from Root and TLD. But, DNS is globally deployed, the privacy protection is on a long road. If recursive resolver communicates to Root/TLD/SLD with DNS over TLS encrypt, then it can avoid the eavesdrop on the resolution path, and defense the tranditional domain hijack on clear text dns queries.
+
+## Root
+
+Root can know almost all hot domain queries of interest business. Google's "Root Servers by Running One on Loopback" directly run 
+
+root zone on the recursive resolver, if top isp recursive resolver and most of public recursive resolvers enable "Root Loopback", 
+
+SLD domain information leakage to Root will be dramatically decreased. recursive resolver can hide information from cross-national root instances successfully.
+
+## TLD ( cn, com, net, ...)
+
+top TLD contains billions of SLDs, the most important internet company like google, microsoft, ibm  registered their domain at .com/.net. As a long-tail flow, the information quality of TLD is decided by the importance of the business that has registered their domain.
+
+ICANN NewG may disperse part of domain queries from com/net in the future.
+
+recursive multi-forwarding, or domain mix-query can hide part of truely query distribution of domains.
+
+## SLD
+
+There are many free authoritative service for SLD, like cloudfare, godaddy, etc. The authoritative service provider can known all about the parked domain zone. 
+
+Therefore, many important internet businesses run their own authoritative server.
+
+When recuse the ns hijack, SLD authoritative server can try to lengthen the NS TTL return to recursive resolver, the mitigating the hijack influnence.
+
+# A privacy proposal satisfied with Nowadays DNS architecture
+
+recursive resolver is the most important node of dns privacy proposal. the user number of recursive resolver covered, the user privacy protection is influnenced by the support of encrypt, dnssec, query hiding on recursive resolver.
+
+DNSCrypt can protect the query link from end-user to recursive resolver. qname minimization, adjust ttl of hot domain query, mix-domain query, prefetch hot domain, can partly hide recursive resolver to authoritative server. 
+
+the query source IP, SLD are long-tail distribution at TLD. If recursive resolver make active prefetch to update history domain cache, then the distribution of domain query will be more even, different from the natural long-tail.
+
+For example, recursive resolver want to hide from TLD:
+- recursive resolver receives domain query from end-user
+- recursive resolver saved all SLD NS of the domain queries
+- recursive resolver send the SLD query to TLD in the history set periodlly
+- recursive resolver update the cache
+
+it can avoid TLD learning the hot-domain distribution of recursive resolver, avoid long-tail domain interest leak.
+
+but this is an ideal proposal for special recursive, not realistic to all recursive.
+
+## namecoin 
+
+namecoin can prevent the tranditional clientHold or delete zone or Registrar misconfigured ns on the Root/TLD.
+
+user can hide the domain queries by load namecoin cache.
+
+another similar proposal can be :  recursive resolvers share their hot-domain queries and response in an share network,
+user load the hot-domain cache by anonymous proxy or encrypt tunnel.
+
+## hide end-user domain query proposal
+
+In tranditional DNS architecture, recursive resolver can know all domain interest of end-user.
+
+To improve user's privacy, recursive resolvers can build hot-domain cache share network.
+- like virus database update, recursive update hot-domain data every minute.
+- end-user run independent software to pull latest recursive cache.
+
+recursive resolver can not directly know the domain interest of end-user.
+
+## end-user domain query P2P network
+
+- build a P2P collaborative domain query network, for example, based on chord.
+- query node generated unique key by <TIMESTAMP, QNAME, QTYPE>
+- query node send the key to assign the dest node
+- dest node make dns query to build <TIMESTAMP, QNAME, QTYPE>'s response 
+- consider about load balance and satisfied with geolocation, maybe add some <AREA, ISP> information.
+- consider about evil node, compared with different nodes' response, or node credit rank.
+
+## conclusion
+
+the good part is improve user privacy, avoid the monitor of recursive resolver.
+
+but it is not so realistic, because most people may not install a special dns software.
+
+
+# References 参考材料
+
+[knell for dns](https://gnunet.org/sites/default/files/mcb-en.pdf)
+
+[dprive problem](https://tools.ietf.org/html/draft-ietf-dprive-problem-statement-06)
+
+[DNS privacy considerations](https://datatracker.ietf.org/doc/draft-bortzmeyer-dnsop-dns-privacy/)
+
+[dns oarc 2016 ag](https://indico.dns-oarc.net/event/22/timetable/#all.detailed)
+
+
+# 现行解析架构
+
+根据DNS协议的分层设计，用户的DNS解析请求从用户终端的Stub 解析器发送到递归服务器，再由递归服务器向根、顶级域、二级及以下权威服务器发起迭代查询。该查询过程至少会涉及上述5个DNS节点的4条查询链路：
+
+（1）	Stub解析器 -> 递归服务器
+
+（2）	递归服务器 -> 根
+
+（3）	递归服务器 -> 顶级域
+
+（4）	递归服务器 -> 二级及以下权威
+
+在查询链路上，如果节点双方采取DNS over TLS等对称加密或Cookie型认证方案，可以有效隐藏查询域名信息，但是无法规避中间人攻击的风险。针对DNS节点在上述查询链路的隐私风险保护，现行方案概要如下：
+
 ## Stub解析器（用户终端）
 
 用户终端的Stub解析器向递归服务器发起查询，由于DNS默认采用UDP包明文发送查询应答数据包，用户内网广播及查询链路存在流量窃听的风险，而从用户侧的Stub解析器到递归服务器链路上存在中间人攻击的风险。
@@ -113,30 +233,3 @@ DNS本质上是一种查表型的信息服务，在传统层次型的DNS解析�
 理论上的好处：能够避免递归服务器对客户端的域名查询信息进行监测分析，从而规避“用户<->递归”层面的隐私泄漏问题。结合现有的 DNS 解析架构形成一个客户端协作网络，减少递归对于用户的集中式窥探可能。
 
 产品上不实用的原因：配个DNS就能搞定的事，大部分人不会再去装一个专用client。
-
-
-# References 参考材料
-
-[knell for dns](https://gnunet.org/sites/default/files/mcb-en.pdf)
-
-[dprive problem](https://tools.ietf.org/html/draft-ietf-dprive-problem-statement-06)
-
-[DNS privacy considerations](https://datatracker.ietf.org/doc/draft-bortzmeyer-dnsop-dns-privacy/)
-
-[dns oarc 2016 ag](https://indico.dns-oarc.net/event/22/timetable/#all.detailed)
-
-
-# 现行解析架构
-
-根据DNS协议的分层设计，用户的DNS解析请求从用户终端的Stub 解析器发送到递归服务器，再由递归服务器向根、顶级域、二级及以下权威服务器发起迭代查询。该查询过程至少会涉及上述5个DNS节点的4条查询链路：
-
-（1）	Stub解析器 -> 递归服务器
-
-（2）	递归服务器 -> 根
-
-（3）	递归服务器 -> 顶级域
-
-（4）	递归服务器 -> 二级及以下权威
-
-在查询链路上，如果节点双方采取DNS over TLS等对称加密或Cookie型认证方案，可以有效隐藏查询域名信息，但是无法规避中间人攻击的风险。针对DNS节点在上述查询链路的隐私风险保护，现行方案概要如下：
-
