@@ -1,0 +1,9 @@
+[book]
+authors = ["abbypan@gmail.com"]
+language = "zh-cn"
+multilingual = true
+src = "src"
+title = "DNS Security Notes"
+
+[output.html]
+
