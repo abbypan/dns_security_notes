@@ -7,3 +7,6 @@ title = "DNS Security Notes"
 
 [output.html]
 
+[output.html.print]
+enable = true
+
