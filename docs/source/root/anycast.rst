@@ -1,7 +1,7 @@
 根镜像(Anycast)
 ===============
 
-`全球根镜像 <http://www.root-servers.org/map/>`_
+`全球根镜像 <http://www.root-servers.org/>`_
 
 根镜像部署涉及地理区域、运营商选择策略，保证覆盖全球重点地区。
 

@@ -15,3 +15,10 @@ DNS安全笔记
    root/index
    root/anycast
 
+.. toctree::
+   :maxdepth: 1
+   :caption: 递归
+
+   recur/index
+   recur/open_recur
+
