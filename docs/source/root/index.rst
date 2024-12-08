@@ -1,7 +1,11 @@
 说明
 ====
 
-`全球根服务 <http://www.iana.org/domains/root/servers>`_
+`根区文件 <https://www.internic.net/domain/root.zone>`_ 由IANA维护，其中登记了所有顶级域的NS记录。
+
+掌握了根区文件的管理权，相当于掌握了互联网服务解析的入口。
+
+`全球根服务器 <http://www.iana.org/domains/root/servers>`_
 
 时延(RTT)
 ---------

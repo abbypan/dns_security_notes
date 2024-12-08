@@ -17,8 +17,23 @@ DNS安全笔记
 
 .. toctree::
    :maxdepth: 1
+   :caption: 顶级域
+
+   tld/tld
+
+
+
+.. toctree::
+   :maxdepth: 1
    :caption: 递归
 
    recur/index
    recur/open_recur
 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 资源记录
+
+   rr/chaos
+   rr/ns
