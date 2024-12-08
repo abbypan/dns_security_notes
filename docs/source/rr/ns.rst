@@ -6,7 +6,7 @@ NS记录标识了当前域名空间的解析服务器，分层授权解析。
 Stealth NS Records
 -------------------
 
-参考`what-are-stealth-ns-records <http://massivedns.com/blog/dns-report-tutorials/what-are-stealth-ns-records/>`_
+`what-are-stealth-ns-records <http://massivedns.com/blog/dns-report-tutorials/what-are-stealth-ns-records/>`_
 
 假设 xxx.com 在tld登记的ns是 ns1.xxx.com
 

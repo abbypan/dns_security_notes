@@ -37,3 +37,11 @@ DNS安全笔记
 
    rr/chaos
    rr/ns
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 隐私
+
+   privacy/ecs
+   privacy/eil
+   privacy/namecoin
