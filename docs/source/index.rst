@@ -29,6 +29,14 @@ DNS安全笔记
 
    recur/index
    recur/open_recur
+   recur/forwarding_recur
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 权威
+
+   auth/lame
 
 
 .. toctree::
@@ -38,6 +46,19 @@ DNS安全笔记
    rr/chaos
    rr/ns
 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 安全
+
+   security/dnssec
+   security/nsec
+   security/dnscurve
+   security/cookie
+   security/resolverless
+   security/hijack
+
+
 .. toctree::
    :maxdepth: 1
    :caption: 隐私
@@ -45,3 +66,4 @@ DNS安全笔记
    privacy/ecs
    privacy/eil
    privacy/namecoin
+   privacy/dnssd
